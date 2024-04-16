@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TodoItemProps } from "../models/TodoItem";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import TodoItems from "./TodoItems";
+import AddIcon from "@mui/icons-material/Add";
 
 const TodoApp = () => {
 	const [todos, setTodos] = useState<TodoItemProps[]>([
@@ -31,13 +32,22 @@ const TodoApp = () => {
 		setTodos(todos.filter((todo) => todo.id !== id));
 	};
 
+	const handleEditTodo = (id: number, newText: string) => {
+		setTodos(
+			todos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo))
+		);
+	};
 	return (
 		<Box
 			component="main"
-			sx={{ m: "5px", p: "5px", border: "1px solid black" }}
+			sx={{
+				p: "15px",
+				border: "1px solid black",
+				height: "100vh",
+			}}
 		>
-			<Typography>Tasks</Typography>
-			<Stack spacing={2} direction="row">
+			<Typography sx={{ textAlign: "center" }}>Tasks</Typography>
+			<Stack spacing={2} direction="row" alignItems="center">
 				<TextField
 					fullWidth
 					label="My daily task"
@@ -45,11 +55,13 @@ const TodoApp = () => {
 					value={newTodoText}
 					onChange={(e) => setNewTodoText(e.target.value)}
 				/>
-				<Button onClick={handleAddTodo} size="small" variant="outlined">
-					Add
-				</Button>
+				<AddIcon onClick={handleAddTodo} fontSize="large" />
 			</Stack>
-			<TodoItems todos={todos} onDeleteTodo={handleDeleteTodo} />
+			<TodoItems
+				todos={todos}
+				onDeleteTodo={handleDeleteTodo}
+				onEditTodo={handleEditTodo}
+			/>
 		</Box>
 	);
 };
