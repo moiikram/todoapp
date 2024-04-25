@@ -2,19 +2,22 @@ import { useState } from "react";
 import { TodoItemProps } from "../models/TodoItem";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import TodoItems from "./TodoItems";
-import AddIcon from "@mui/icons-material/Add";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+// Custom colors
+const theme = createTheme({
+	palette: {
+		primary: {
+			main: "#c84263",
+		},
+		secondary: {
+			main: "#DF2929",
+		},
+	},
+});
 
 const TodoApp = () => {
-	const [todos, setTodos] = useState<TodoItemProps[]>([
-		{
-			id: 1,
-			text: "Get Groceries",
-		},
-		{
-			id: 2,
-			text: "Go to dentist",
-		},
-	]);
+	const [todos, setTodos] = useState<TodoItemProps[]>([]);
 	const [newTodoText, setNewTodoText] = useState<string>("");
 
 	const handleAddTodo = () => {
@@ -38,31 +41,61 @@ const TodoApp = () => {
 		);
 	};
 	return (
-		<Box
-			component="main"
-			sx={{
-				p: "15px",
-				border: "1px solid black",
-				height: "100vh",
-			}}
-		>
-			<Typography sx={{ textAlign: "center" }}>Tasks</Typography>
-			<Stack spacing={2} direction="row" alignItems="center">
-				<TextField
-					fullWidth
-					label="My daily task"
-					variant="outlined"
-					value={newTodoText}
-					onChange={(e) => setNewTodoText(e.target.value)}
-				/>
-				<AddIcon onClick={handleAddTodo} fontSize="large" />
-			</Stack>
-			<TodoItems
-				todos={todos}
-				onDeleteTodo={handleDeleteTodo}
-				onEditTodo={handleEditTodo}
-			/>
-		</Box>
+		<ThemeProvider theme={theme}>
+			<Box
+				component="main"
+				sx={{
+					p: "0px 150px",
+					height: "100vh",
+					overflow: "auto",
+				}}
+			>
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+					}}
+				>
+					<Typography sx={{ fontSize: "2.5rem" }}>Tasks</Typography>
+				</Box>
+				<Stack
+					sx={{ justifyContent: "center" }}
+					direction={{ xs: "column", sm: "row" }}
+				>
+					<TextField
+						sx={{ minWidth: "70%" }}
+						label="Add your todos here"
+						value={newTodoText}
+						onChange={(e) => setNewTodoText(e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								handleAddTodo();
+							}
+						}}
+					/>
+					<Button variant="contained" color="primary" onClick={handleAddTodo}>
+						Add
+					</Button>
+				</Stack>
+				{todos.length > 0 ? (
+					<TodoItems
+						todos={todos}
+						onDeleteTodo={handleDeleteTodo}
+						onEditTodo={handleEditTodo}
+					/>
+				) : (
+					<Typography
+						sx={{
+							fontSize: "2rem",
+							padding: "8px",
+							color: "#DF2929", // Change color to stand out
+						}}
+					>
+						Please enter a task before adding.
+					</Typography>
+				)}
+			</Box>
+		</ThemeProvider>
 	);
 };
 

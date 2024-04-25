@@ -12,10 +12,14 @@ const TodoItems = ({ todos, onDeleteTodo, onEditTodo }: TodoItemsProps) => {
 	return (
 		<>
 			<Typography
-				sx={{ borderBottom: "1px solid black", mt: "20px", mb: "20px" }}
+				sx={{
+					fontSize: "1.5rem",
+					borderBottom: "1px solid black",
+					mt: "20px",
+					mb: "20px",
+				}}
 			>
-				{" "}
-				My Added Tasks
+				Pending Tasks
 			</Typography>
 			{todos.map((todo: TodoItemProps) => (
 				<TodoItem
